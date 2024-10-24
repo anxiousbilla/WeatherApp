@@ -1,21 +1,48 @@
 package com.aakashdwivedy.weatherapp.ui.screens
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import com.aakashdwivedy.weatherapp.ui.components.PermissionDeniedScreen
+import com.aakashdwivedy.weatherapp.ui.components.WeatherHomeScreen
+import com.aakashdwivedy.weatherapp.utils.startLocationUpdates
+import com.google.android.gms.location.FusedLocationProviderClient
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-        .fillMaxSize()
-        .background(Color.Black)
-    ) {
-        Text("Weather App", color = Color.White)
+fun HomeScreen(
+    navController: NavHostController,
+    fusedLocationProvider: FusedLocationProviderClient?
+) {
+    val context = LocalContext.current
+    var latitude = remember { mutableStateOf<Double?>(null) }
+    var longitude = remember { mutableStateOf<Double?>(null) }
+    var permissionGranted = remember { mutableStateOf(false) }
+
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            startLocationUpdates(fusedLocationProvider, context) { lat, long ->
+                latitude.value = lat
+                longitude.value = long
+            }
+            permissionGranted.value = true
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+    }
+
+    if (permissionGranted.value) {
+        WeatherHomeScreen()
+    } else {
+        PermissionDeniedScreen()
     }
 }

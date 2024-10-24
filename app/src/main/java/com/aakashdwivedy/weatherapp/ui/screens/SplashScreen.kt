@@ -27,12 +27,12 @@ import kotlinx.coroutines.delay
 fun SplashScreen(modifier: Modifier, finishAnimation: () -> Unit) {
     var startAnimation by remember { mutableStateOf(false) }
     val alpha by animateFloatAsState(
-        targetValue = if (startAnimation) 0.1f else 1f,
+        targetValue = if (startAnimation) 1f else 0.1f,
         animationSpec = tween(durationMillis = 900),
         label = "alpha value of splash icon"
     )
     val scale by animateFloatAsState(
-        targetValue = if (startAnimation) 0.5f else 1f,
+        targetValue = if (startAnimation) 1f else 0.25f,
         animationSpec = tween(durationMillis = 900),
         label = "scale value of splash icon"
     )
@@ -42,7 +42,7 @@ fun SplashScreen(modifier: Modifier, finishAnimation: () -> Unit) {
         startAnimation = true
     }
 
-    if (alpha == 0.1F) finishAnimation()
+    if (alpha == 1F) finishAnimation()
 
     Column(
         modifier = Modifier

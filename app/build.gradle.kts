@@ -61,6 +61,8 @@ dependencies {
     implementation (libs.androidx.core.splashscreen)
     // Navigation
     implementation (libs.androidx.navigation.compose)
+    // Location
+    implementation( libs.play.services.location)
     // Retrofit for API call
     implementation (libs.retrofit)
     // For JSON parsing

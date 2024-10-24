@@ -6,9 +6,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.location.FusedLocationProviderClient
 
 @Composable
-fun WeatherAppMain(modifier: Modifier) {
+fun WeatherAppMain(modifier: Modifier, fusedLocationProvider: FusedLocationProviderClient?) {
     val navController = rememberNavController()
 
     NavHost(
@@ -17,7 +18,7 @@ fun WeatherAppMain(modifier: Modifier) {
         startDestination = ScreenNames.HomeScreen.name
     ) {
         composable(route = ScreenNames.HomeScreen.name) {
-            HomeScreen(navController = navController)
+            HomeScreen(navController = navController, fusedLocationProvider)
         }
     }
 }

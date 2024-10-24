@@ -16,12 +16,18 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.aakashdwivedy.weatherapp.ui.screens.WeatherAppMain
 import com.aakashdwivedy.weatherapp.ui.screens.SplashScreen
 import com.aakashdwivedy.weatherapp.ui.theme.WeatherAppTheme
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 class MainActivity : ComponentActivity() {
+    private var fusedLocationProvider: FusedLocationProviderClient? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        fusedLocationProvider = LocationServices.getFusedLocationProviderClient(this)
+
         setContent {
             WeatherAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) {
@@ -29,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     if (isShowSplash) {
                         SplashScreen(modifier = Modifier.padding(it)) { isShowSplash = false }
                     } else {
-                        WeatherAppMain(modifier = Modifier.padding(it))
+                        WeatherAppMain(modifier = Modifier.padding(it), fusedLocationProvider)
                     }
                 }
             }
